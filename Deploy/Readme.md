@@ -1,40 +1,42 @@
-# Use ARM templates to setup and maintain this module
+# Brug ARM-skabeloner til at opsætte og vedligeholde dette modul
 
-## Prerequisites
+## Forudsætninger
 
-If you don't have an Azure subscription, create a free [account](https://azure.microsoft.com/free/?ref=microsoft.com&utm_source=microsoft.com&utm_medium=docs&utm_campaign=visualstudio) before you begin.
+Hvis du ikke har et Azure-abonnement, kan du oprette et gratis [konto](https://azure.microsoft.com/free/?ref=microsoft.com&utm_source=microsoft.com&utm_medium=docs&utm_campaign=visualstudio), før du begynder.
 
-Install the [Warehouse environment](https://github.com/Bygdrift/Warehouse/tree/master/Deploy), before installing this or any module.
+Som det første skal du installere [Warehouse-miljøet](https://github.com/Bygdrift/Warehouse/tree/master/Deploy). Det opretter grundmiljøet i Azure med en Datalake, database, keyvault, Apllication Insight. Derefter kan du installere forskellige moduler som alle anvender denne grundopsætning.
 
-## Videos
+## Videoer
 
-2022-01-28: [Setup the Example module](https://www.youtube.com/watch?v=itwd2XdHIkM) (in Danish):
+2022-01-28: [Opsæt eksempel-modulet](https://www.youtube.com/watch?v=itwd2XdHIkM):
 
-2022-01-28: [Update an already installed module, once a new update has been pushed to GitHub](https://www.youtube.com/watch?v=XywfV_n-320) (in Danish):
+2022-01-28: [Opdater et allerede installeret modul, når en ny opdatering er blevet pushet til GitHub](https://www.youtube.com/watch?v=XywfV_n-320):
 
-## Setup the Warehouse environment with the portal:
+## Konfigurer Warehouse-miljøet med portalen:
+Opsæt nu dette modul:
+[![Deploy til Azure](https://raw.githubusercontent.com/Bygdrift/Warehouse/master/Docs/Images/deploytoazureButton.svg)](https://portal.azure.com/#create/Microsoft.Template /uri/https%3A%2F%2Fraw.githubusercontent.com%2FBygdrift%2FWarehouse.Modules.Example%2Fmaster%2FDeploy%2FWarehouse.Modules.Example_ARM.json)
+[![Visualize](https://raw.githubusercontent.com/Bygdrift/Warehouse/master/Docs/Images/visualizebutton.svg)](http://armviz.io/#/?load=https%3A%2F %2Fraw.githubusercontent.com%2FBygdrift%2FWarehouse.Modules.Example%2Fmaster%2FDeploy%2FWarehouse.Modules.Example_ARM.json)
 
-[![Deploy To Azure](https://raw.githubusercontent.com/Bygdrift/Warehouse/master/Docs/Images/deploytoazureButton.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FBygdrift%2FWarehouse.Modules.Example%2Fmaster%2FDeploy%2FWarehouse.Modules.Example_ARM.json)
-[![Visualize](https://raw.githubusercontent.com/Bygdrift/Warehouse/master/Docs/Images/visualizebutton.svg)](http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FBygdrift%2FWarehouse.Modules.Example%2Fmaster%2FDeploy%2FWarehouse.Modules.Example_ARM.json)
+Installationen vil opsætte en Windows-hostingplan og en functionapp, der indeholder softwaren fra dette GitHub-lager.
 
-This will setup a Windows hosting plan and a function app that contains the software from this GitHub repository.
+Hvis du skal ændre nogle indstillinger, kan du køre opsætningen igen. Du kan også ændre indstillinger i Azure. Du må dog ikke ændre modulets navn, da det er et id som forplanter sig ud i opsætningen. Indstillinger er gemt i: Functionapp > configuration. Og: Keyvault > Secrets.
 
-If you have to change some settings, you can run the setup again, and it should not affect data, but better take backup to be sure.
+## Konfigurer miljøet med Azure CLI
 
-## Setup the environment with Azure CLI
+Du kan også køre ARM fra PowerShell i stedet for at køre det via portalen.
 
-You can also run the ARM from PowerShell.
+Kør enten PowerShell fra computeren ved at installere [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli), eller brug [Azure Cloud Shell](https:/ /shell.azure.com/bash) fra Azure-portalen. Følgende instruktion vil fokusere på kørsel fra en computer.
 
-Either run the PowerShell from computer by installing [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli), or use the [Azure Cloud Shell](https://shell.azure.com/bash) from the Azure portal. This instruction will focus on the run from a computer.
+Download denne [ARM.parameters.json](https://raw.githubusercontent.com/Bygdrift/Warehouse.Modules.Example/master/Deploy/Warehouse.Modules.DaluxFMApi_ARM.parameters.json) til en mappe og udfyld omhyggeligt hver variabel.
 
-Download this [warehouse_ARM.parameters.json](https://raw.githubusercontent.com/Bygdrift/Warehouse.Modules.Example/master/Deploy/Warehouse.Modules.Example_ARM.parameters.json) to a folder and carefully fill in each variable.
+Download [ARM.json](https://raw.githubusercontent.com/Bygdrift/Warehouse.Modules.Example/master/Deploy/Warehouse.Modules.DaluxFMApi_ARM.json) til den samme mappe.
 
-Download [warehouse_ARM.json](https://raw.githubusercontent.com/Bygdrift/Warehouse.Modules.Example/master/Deploy/Warehouse.Modules.Example_ARM.json) to the same folder.
+Log ind på azure: `az login`.
 
-Login to azure: `az login`.
+Og derefter: `az deployment group create -g <resourceGroupName> --template-file ./Warehouse.Modules.DaluxFMApi_ARM.json --parameters ./Warehouse.Modules.DaluxFMApi_ARM.parameters.json`
 
-And then: `az deployment group create -g <resourceGroupName> --template-file ./Warehouse.Modules.Example_ARM.json --parameters ./Warehouse.Modules.Example_ARM.parameters.json`
+Erstat `<resourceGroupName>` med det faktiske navn.
 
-Replace `<resourceGroupName>` with actual name.
+Det er en fordel med CLI, at man kan samle alle parametre i én json og opbygge et powershell script som opretter hele miljøet. Hvis noget fejler så kan man afinstallere, ændre på kode og køre det igen.
 
-I personally prefer to use CLI so I can collect all parameters in one json.
+Man kan fjerne alt man har installeret med: `az group delete -g <resourceGroupName>`. Vær opmærksom på at den grundlæggende Warehouse-opsætning også slettes.
