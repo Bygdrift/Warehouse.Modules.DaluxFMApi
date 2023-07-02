@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Module.Services.Models
+namespace Container.Services.Models
 {
     public class AssetClassification
     {

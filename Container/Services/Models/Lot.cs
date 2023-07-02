@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Module.Services.Models
+namespace Container.Services.Models
 {
-    public class Building
+    public class Lot
     {
         public int id { get; set; }
         public string name { get; set; }
@@ -13,12 +17,7 @@ namespace Module.Services.Models
         public string number { get; set; }
         public string zipCode { get; set; }
         public string city { get; set; }
-        public bool owned { get; set; }
-        public string label { get; set; }
-        public float grossArea { get; set; }
-        public float netArea { get; set; }
         public DateTime lastChange { get; set; }
-        public DateTime? lastBIMChange { get; set; }
         public Userdefinedfield[] userDefinedFields { get; set; }
     }
 }

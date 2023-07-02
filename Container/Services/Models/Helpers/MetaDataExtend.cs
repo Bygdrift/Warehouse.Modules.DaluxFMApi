@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Module.AppFunctions.Models
+namespace Container.Services.Models
 {
     public class MetaDataExtend<T> where T : class
     {

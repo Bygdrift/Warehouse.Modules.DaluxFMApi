@@ -1,14 +1,12 @@
 ﻿using Bygdrift.CsvTools;
 using Bygdrift.DataLakeTools;
 using Bygdrift.Warehouse;
-using Module.Services.Models;
+using Container.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
 
-namespace Module.Refines
+namespace Container.Refines
 {
     public static class GenericRefine
     {

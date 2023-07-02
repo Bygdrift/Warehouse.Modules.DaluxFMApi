@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Module.Services.Models
+namespace Container.Services.Models
 {
     public class Root<T> where T : class
     {

@@ -1,11 +1,8 @@
 ﻿using Bygdrift.DataLakeTools;
-using Bygdrift.Warehouse;
-using Module.Refines;
-using Module.Services.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Container.Refines;
+using Container.Services.Models;
 
-namespace Module.AppFunctions.Models
+namespace Container.Models
 {
     public class DataCollection
     {
@@ -25,14 +22,15 @@ namespace Module.AppFunctions.Models
             if (IsLoaded)
                 return;
 
-            if (Name == "assets") await GenericRefine.RefineAsync(DataRoot.App, await GetDataFromDataLakeOrApiAsync<Asset>());
-            else if (Name == "buildings") await GenericRefine.RefineAsync(DataRoot.App, await GetDataFromDataLakeOrApiAsync<Building>());
-            else if (Name == "documents") await GenericRefine.RefineAsync(DataRoot.App, await GetDataFromDataLakeOrApiAsync<Document>());
-            else if (Name == "estates") await GenericRefine.RefineAsync(DataRoot.App, await GetDataFromDataLakeOrApiAsync<Estate>());
-            else if (Name == "locations") await GenericRefine.RefineAsync(DataRoot.App, await GetDataFromDataLakeOrApiAsync<Location>());
-            else if (Name == "lots") await GenericRefine.RefineAsync(DataRoot.App, await GetDataFromDataLakeOrApiAsync<Lot>());
-            else if (Name == "rooms") await GenericRefine.RefineAsync(DataRoot.App, await GetDataFromDataLakeOrApiAsync<Room>());
-            else if (Name == "workorders") await GenericRefine.RefineAsync(DataRoot.App, await GetDataFromDataLakeOrApiAsync<WorkOrder>());
+            var apiName = new ApiName();
+            if (apiName.Compare<Asset>(Name)) await GenericRefine.RefineAsync(DataRoot.App, await GetDataFromDataLakeOrApiAsync<Asset>());
+            else if (apiName.Compare<Building>(Name)) await GenericRefine.RefineAsync(DataRoot.App, await GetDataFromDataLakeOrApiAsync<Building>());
+            else if (apiName.Compare<Document>(Name)) await GenericRefine.RefineAsync(DataRoot.App, await GetDataFromDataLakeOrApiAsync<Document>());
+            else if (apiName.Compare<Estate>(Name)) await GenericRefine.RefineAsync(DataRoot.App, await GetDataFromDataLakeOrApiAsync<Estate>());
+            else if (apiName.Compare<Location>(Name)) await GenericRefine.RefineAsync(DataRoot.App, await GetDataFromDataLakeOrApiAsync<Location>());
+            else if (apiName.Compare<Lot>(Name)) await GenericRefine.RefineAsync(DataRoot.App, await GetDataFromDataLakeOrApiAsync<Lot>());
+            else if (apiName.Compare<Room>(Name)) await GenericRefine.RefineAsync(DataRoot.App, await GetDataFromDataLakeOrApiAsync<Room>());
+            else if (apiName.Compare<WorkOrder>(Name)) await GenericRefine.RefineAsync(DataRoot.App, await GetDataFromDataLakeOrApiAsync<WorkOrder>());
             else DataRoot.App.Log.LogError($"In the appSetting 'DaluxFMDataToFetch', there are used an unknown name: '{Name}'.");
         }
 
