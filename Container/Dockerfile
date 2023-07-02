@@ -5,8 +5,8 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["Container/Container.csproj", "Container/"]
-RUN dotnet restore "Container/Container.csproj"
+COPY ["Container.csproj", ""]
+RUN dotnet restore "Container.csproj"
 COPY . .
 WORKDIR "/src/Container"
 RUN dotnet build "Container.csproj" -c Release -o /app/build
