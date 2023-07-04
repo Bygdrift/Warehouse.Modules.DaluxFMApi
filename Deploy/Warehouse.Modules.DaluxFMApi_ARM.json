@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.18.4.5664",
-      "templateHash": "7785768341296849007"
+      "templateHash": "18090230273401924747"
     }
   },
   "parameters": {
@@ -178,7 +178,7 @@
       "apiVersion": "2021-01-01",
       "name": "[format('{0}/{1}', variables('functionAppName'), 'web')]",
       "properties": {
-        "repoUrl": "https://github.com/Bygdrift/Warehouse.Modules.DaluxFMApi",
+        "repoUrl": "https://github.com/Bygdrift/Warehouse.Modules.Containers",
         "branch": "master",
         "isManualIntegration": true
       },
