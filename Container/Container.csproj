@@ -5,7 +5,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-		<Version>0.4.1</Version>
+		<Version>0.4.2</Version>
 		<PackageId>Bygdrift.Warehouse.Modules.DaluxFMApi</PackageId>
 		<Authors>Kenboc</Authors>
 		<Company>Bygdrift</Company>
