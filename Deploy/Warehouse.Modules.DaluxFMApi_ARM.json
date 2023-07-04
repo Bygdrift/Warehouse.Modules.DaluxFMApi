@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.18.4.5664",
-      "templateHash": "903962311302163844"
+      "templateHash": "7785768341296849007"
     }
   },
   "parameters": {
@@ -137,6 +137,22 @@
             {
               "name": "ScheduleExpression",
               "value": "[parameters('scheduleExpression')]"
+            },
+            {
+              "name": "ContainerOperatingSystem",
+              "value": "Linux"
+            },
+            {
+              "name": "Container1Name",
+              "value": "daluxfmapi.container"
+            },
+            {
+              "name": "Container1Image",
+              "value": "ghcr.io/bygdrift/warehouse.modules.daluxfmapi/container:latest"
+            },
+            {
+              "name": "Container1Variables",
+              "value": "[format('[{{DaluxFMDataToFetch:''{0}''}}]', parameters('daluxFMDataToFetch'))]"
             },
             {
               "name": "TimeZoneId",
