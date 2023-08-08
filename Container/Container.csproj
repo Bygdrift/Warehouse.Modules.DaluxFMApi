@@ -5,14 +5,16 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-		<Version>0.4.2</Version>
+		<Version>0.4.3</Version>
 		<PackageId>Bygdrift.Warehouse.Modules.DaluxFMApi</PackageId>
 		<Authors>Kenboc</Authors>
 		<Company>Bygdrift</Company>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Bygdrift.Warehouse" Version="1.0.5" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\Warehouse\Warehouse\Warehouse.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="appsettings.Development.json">
@@ -20,9 +22,6 @@
 		</None>
 		<None Update="appsettings.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="test.txt">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
 </Project>

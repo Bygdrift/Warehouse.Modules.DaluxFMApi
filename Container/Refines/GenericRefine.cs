@@ -1,5 +1,5 @@
-﻿using Bygdrift.CsvTools;
-using Bygdrift.DataLakeTools;
+﻿using Bygdrift.Tools.CsvTool;
+using Bygdrift.Tools.DataLakeTool;
 using Bygdrift.Warehouse;
 using Container.Services.Models;
 using Newtonsoft.Json;

@@ -1,4 +1,5 @@
-﻿using Bygdrift.Warehouse.Helpers.Attributes;
+﻿
+using Bygdrift.Warehouse.Attributes;
 
 namespace Container
 {

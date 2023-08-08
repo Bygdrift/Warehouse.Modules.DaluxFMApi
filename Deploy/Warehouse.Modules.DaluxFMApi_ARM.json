@@ -5,13 +5,13 @@
     "_generator": {
       "name": "bicep",
       "version": "0.18.4.5664",
-      "templateHash": "18090230273401924747"
+      "templateHash": "12906935093054687539"
     }
   },
   "parameters": {
     "moduleName": {
       "type": "string",
-      "defaultValue": "Example",
+      "defaultValue": "DaluxFMApi",
       "metadata": {
         "description": "The name of the module. Only use between 3-24 letters or numers, or the Warehouse can't function. The functionApp gets the same name followed by the \"-resourceGroup.id\". The modulename is hard to change later, so try to keep it static. It is used in dataLake and databse as an identifier of data that comes from this app"
       },
@@ -29,21 +29,21 @@
       "type": "int",
       "defaultValue": 20,
       "metadata": {
-        "description": "Each run takes around 8 minutes. In Hillerød it right now have to run 30 minutes = 4 runs. If you set MaxRuns to 20 it will first timeout after 2,5 hours end that should be plenty of time. The program will raise an error if it's not enough time"
+        "description": "Each run takes about 8 minutes. In Hillerød it right now have to run 30 minutes = 4 runs. If you set MaxRuns to 20 it will first timeout after 2,5 hours and that should be plenty of time. The program will raise an error if it's not enough."
       }
     },
     "daluxFMDataToFetch": {
       "type": "string",
       "defaultValue": "assets, assetClassifications, buildings, documents, estates, locations, lots, rooms, workorders",
       "metadata": {
-        "description": ""
+        "description": "Write commaseperated the data you want to fetch. Consider if each is relevant for your need and how much data that there are in each. Choose between: assets, assetClassifications, buildings, documents, estates, locations, lots, rooms, workorders"
       }
     },
     "monthsToKeepDataInDataLake": {
       "type": "int",
       "defaultValue": 12,
       "metadata": {
-        "description": "How many months back, data should be stored in the Data Lake for safety."
+        "description": "How many months back, data should be stored in the Data Lake for safety. It will not be deleted from the database."
       }
     },
     "scheduleExpression": {
@@ -63,7 +63,8 @@
   },
   "variables": {
     "functionAppName": "[format('{0}-{1}', parameters('moduleName'), uniqueString(resourceGroup().id))]",
-    "location": "[resourceGroup().location]"
+    "location": "[resourceGroup().location]",
+    "contributorRoleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]"
   },
   "resources": [
     {
@@ -119,10 +120,6 @@
               "value": "[format('{0}.azurewebsites.net', variables('functionAppName'))]"
             },
             {
-              "name": "DaluxFMDataToFetch",
-              "value": "[parameters('daluxFMDataToFetch')]"
-            },
-            {
               "name": "ModuleName",
               "value": "[parameters('moduleName')]"
             },
@@ -153,6 +150,10 @@
             {
               "name": "Container1Variables",
               "value": "[format('[{{DaluxFMDataToFetch:''{0}''}}]', parameters('daluxFMDataToFetch'))]"
+            },
+            {
+              "name": "ResourceGroup",
+              "value": "[resourceGroup().name]"
             },
             {
               "name": "TimeZoneId",
@@ -205,6 +206,19 @@
             "tenantId": "[reference(resourceId('Microsoft.Web/sites', variables('functionAppName')), '2021-02-01', 'full').identity.tenantId]"
           }
         ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('functionAppName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "name": "[guid(resourceGroup().id, parameters('moduleName'), variables('contributorRoleDefinitionId'), 'ServicePrincipal')]",
+      "properties": {
+        "roleDefinitionId": "[variables('contributorRoleDefinitionId')]",
+        "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('functionAppName')), '2021-02-01', 'full').identity.principalId]",
+        "principalType": "ServicePrincipal"
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', variables('functionAppName'))]"

@@ -1,4 +1,4 @@
-﻿using Bygdrift.DataLakeTools;
+﻿using Bygdrift.Tools.DataLakeTool;
 using Bygdrift.Warehouse;
 using Container.Services;
 using Container.Services.Models;
@@ -13,6 +13,7 @@ namespace Container
 
         public static async Task Main(string[] args)
         {
+            App.Log.LogInformation("Starting");
             if (string.IsNullOrEmpty(App.Settings.DaluxFMDataToFetch))
             {
                 App.Log.LogInformation("No data was typed into setting: 'DaluxFMDataToFetch' Stopping.");
@@ -35,6 +36,7 @@ namespace Container
                 else if (apiName.Compare<WorkOrder>(name)) await GetDataFromApiAsync<WorkOrder>();
                 else App.Log.LogError("In the appSetting 'DaluxFMDataToFetch', there are used an unknown name: '{name}'. Possible names: '{possible}'.", name, possiblNames);
             }
+            App.Log.LogInformation("Finished");
         }
 
         private static async Task GetDataFromApiAsync<T>() where T : class
@@ -42,7 +44,8 @@ namespace Container
             var name = typeof(T).Name;
             App.Log.LogInformation("Get {name} data. Loading data from WebService.", name);
             var res = await Service.GetDataAsync<T>();
-            await App.DataLake.SaveObjectAsync(res?.Items, "Raw", name + ".json", FolderStructure.DatePath);
+            if (res != null)
+                await App.DataLake.SaveObjectAsync(res.Items, "Raw", name + ".json", FolderStructure.DatePath);
         }
     }
 }

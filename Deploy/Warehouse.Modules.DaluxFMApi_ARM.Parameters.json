@@ -2,14 +2,20 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "DataFromSetting": {
-            "value": "Some text"
-        },
-        "DataFromSecret": {
-            "value": "A secret"
-        },
         "ModuleName": {
-            "value": "Example"
+            "value": "DaluxFMApi"
+        },
+        "daluxFMApiKey": {
+            "value": ""
+        },
+        "maxRuns": {
+            "value": 20
+        },
+        "daluxFMDataToFetch": {
+            "value": "estates"
+        },
+        "monthsToKeepDataInDataLake": {
+            "value": 12
         },
         "ScheduleExpression": {
             "value": "0 0 1 * * *"

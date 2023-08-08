@@ -2,9 +2,14 @@
 
 Med dette modul kan du hente data fra [DaluxFM](https://www.dalux.com/da/fm-overview/) til dit eget datavarehus på Azure.
 
-Modulet bruger DaluxFM API. Der er et andet modul [her](https://github.com/hillerod/Warehouse.Modules.DaluxFM), der bruger DaluxFM SOAP-webservice.
+Modulet bruger DaluxFM API. Der er et andet modul [her](https://github.com/hillerod/Warehouse.Modules.DaluxFM), der bruger DaluxFM SOAP-webservice men Dalux er ved at udfase det.
 
 Modulet er bygget med [Bygdrift Warehouse](https://github.com/Bygdrift/Warehouse), der gør det muligt at vedhæfte flere moduler i det samme Azure miljø som indsamler data fra alle slags tjenester på en billig måde i Datalake og  MS SQL database.
+
+## Opbygning
+
+Udover Bygdrift Warehouse basisopsætning, så installeres der også en `Azure Function` Ved installationen bestemmer du hvor tit denne function skal køre. Den sikrer at den nyeste [Docker Container](https://ghcr.io/bygdrift/warehouse.modules.daluxfmapi/container) er installeret som en `Azure Container Instance` og derefter eksekverer den programmet fra containeren.
+Dette setup sikrer billig afvikling på Azure.
 
 # Installation i Azure
 

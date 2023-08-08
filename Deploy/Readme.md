@@ -1,13 +1,11 @@
 # Brug ARM-skabeloner til at opsætte og vedligeholde dette modul
 
 ## Forudsætninger
-
 Hvis du ikke har et Azure-abonnement, kan du oprette et gratis [konto](https://azure.microsoft.com/free/?ref=microsoft.com&utm_source=microsoft.com&utm_medium=docs&utm_campaign=visualstudio), før du begynder.
 
 Som det første skal du installere [Warehouse-miljøet](https://github.com/Bygdrift/Warehouse/tree/master/Deploy). Det opretter grundmiljøet i Azure med en Datalake, database, keyvault, Apllication Insight. Derefter kan du installere forskellige moduler som alle anvender denne grundopsætning.
 
 ## Videoer
-
 2022-01-28: [Opsæt eksempel-modulet](https://www.youtube.com/watch?v=itwd2XdHIkM):
 
 2022-01-28: [Opdater et allerede installeret modul, når en ny opdatering er blevet pushet til GitHub](https://www.youtube.com/watch?v=XywfV_n-320):
