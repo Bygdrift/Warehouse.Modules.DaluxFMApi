@@ -34,7 +34,7 @@
     },
     "daluxFMDataToFetch": {
       "type": "string",
-      "defaultValue": "assets, assetClassifications, buildings, documents, estates, locations, lots, rooms, workorders",
+      "defaultValue": "assets, assetClassifications, buildings, companies, documents, estates, floors, locations, lots, rooms, tickets, workorders",
       "metadata": {
         "description": "A comma separated list of data to load"
       }

@@ -65,7 +65,7 @@ namespace Module.Services
             {
                 data = await GetDataPackageAsync<T>(url, bookmark, limit);
                 if (data == null)
-                    return default;
+                    return res.Any() ? new MetaDataExtend<T>(res, res.Count, "0", "0") : default;
 
                 res.AddRange(data.items.Select(o => o.data));
 

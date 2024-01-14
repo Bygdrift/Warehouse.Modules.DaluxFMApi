@@ -11,9 +11,9 @@
         "maxRuns": {
             "value": "20"
         },
-        "daluxFMDataToFetch": {
-            "value": "assets, assetClassifications, buildings, documents, estates, locations, lots, rooms, workorders"
-        },
+      "daluxFMDataToFetch": {
+        "value": "assets, assetClassifications, buildings, companies, documents, estates, floors, locations, lots, rooms, tickets, workorders"
+      },
         "monthsToKeepDataInDataLake": {
             "value": "12"
         },

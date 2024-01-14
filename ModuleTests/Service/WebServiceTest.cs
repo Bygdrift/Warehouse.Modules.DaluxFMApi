@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Module;
+using Module.Refines;
 using Module.Services;
 using Module.Services.Models;
 using Moq;
@@ -58,6 +59,16 @@ namespace ModuleTests.Service
         }
 
         [TestMethod]
+        public async Task GetCompanies()
+        {
+            var data = await service.GetDataAsync<Company>(1);
+            var errors = app.Log.GetErrorsAndCriticals();
+            Assert.IsFalse(errors.Any());
+            SaveToFile(data.Items);
+            await GenericRefine.RefineAsync(app, data.Items, true);
+        }
+
+        [TestMethod]
         public async Task GetDocuments()
         {
             var data = await service.GetDataAsync<Document>(2);
@@ -71,6 +82,16 @@ namespace ModuleTests.Service
             var errors = app.Log.GetErrorsAndCriticals();
             Assert.IsFalse(errors.Any());
             SaveToFile(data.Items);
+        }
+
+        [TestMethod]
+        public async Task GetFloors()
+        {
+            var data = await service.GetDataAsync<Floor>(1);
+            var errors = app.Log.GetErrorsAndCriticals();
+            Assert.IsFalse(errors.Any());
+            SaveToFile(data.Items);
+            await GenericRefine.RefineAsync(app, data.Items, true);
         }
 
         [TestMethod]
@@ -92,6 +113,16 @@ namespace ModuleTests.Service
         {
             var data = await service.GetDataAsync<Room>(2);
             SaveToFile(data.Items);
+        }
+
+        [TestMethod]
+        public async Task GetTickets()
+        {
+            var data = await service.GetDataAsync<Ticket>(1);
+            var errors = app.Log.GetErrorsAndCriticals();
+            Assert.IsFalse(errors.Any());
+            SaveToFile(data.Items);
+            await GenericRefine.RefineAsync(app, data.Items, true);
         }
 
         [TestMethod]

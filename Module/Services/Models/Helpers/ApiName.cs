@@ -11,11 +11,14 @@ namespace Module.Services.Models.Helpers
             { typeof(Asset), "assets"},
             { typeof(AssetClassification), "assetClassifications"},
             { typeof(Building), "buildings"},
+            { typeof(Company), "companies"},
             { typeof(Document), "documents"},
             { typeof(Estate), "estates"},
+            { typeof(Floor), "floors"},
             { typeof(Location), "locations"},
             { typeof(Lot), "lots"},
             { typeof(Room), "rooms"},
+            { typeof(Ticket), "tickets"},
             { typeof(WorkOrder), "workorders"}
         };
 

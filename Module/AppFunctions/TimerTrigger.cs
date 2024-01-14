@@ -84,11 +84,14 @@ namespace Module.AppFunctions
                 if (apiName.Compare<Asset>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Asset>(app, service, call)).IsLoaded;
                 else if (apiName.Compare<AssetClassification>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<AssetClassification>(app, service, call)).IsLoaded;
                 else if (apiName.Compare<Building>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Building>(app, service, call)).IsLoaded;
+                else if (apiName.Compare<Company>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Company>(app, service, call)).IsLoaded;
                 else if (apiName.Compare<Document>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Document>(app, service, call)).IsLoaded;
                 else if (apiName.Compare<Estate>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Estate>(app, service, call)).IsLoaded;
+                else if (apiName.Compare<Floor>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Floor>(app, service, call)).IsLoaded;
                 else if (apiName.Compare<Location>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Location>(app, service, call)).IsLoaded;
                 else if (apiName.Compare<Lot>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Lot>(app, service, call)).IsLoaded;
                 else if (apiName.Compare<Room>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Room>(app, service, call)).IsLoaded;
+                else if (apiName.Compare<Ticket>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Ticket>(app, service, call)).IsLoaded;
                 else if (apiName.Compare<WorkOrder>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<WorkOrder>(app, service, call)).IsLoaded;
                 else
                 {
