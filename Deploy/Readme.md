@@ -14,7 +14,7 @@ Som det første skal du installere [Warehouse-miljøet](https://github.com/Bygdr
 
 ## Konfigurer Warehouse-miljøet med portalen:
 Opsæt nu dette modul:
-[![Deploy til Azure](https://raw.githubusercontent.com/Bygdrift/Warehouse/master/Docs/Images/deploytoazureButton.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FBygdrift%2FWarehouse.Modules.DaluxFMAPI%2Fmaster%2FDeploy%2FWarehouse.Modules.DaluxFMApi_ARM.json)
+[![Deploy til Azure](https://raw.githubusercontent.com/Bygdrift/Warehouse/master/Docs/Images/deploytoazureButton.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FBygdrift%2FWarehouse.Modules.DaluxFMApi%2Fmaster%2FDeploy%2FWarehouse.Modules.DaluxFMApi_ARM.json)
 [![Visualize](https://raw.githubusercontent.com/Bygdrift/Warehouse/master/Docs/Images/visualizebutton.svg)](http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FBygdrift%2FWarehouse.Modules.DaluxFMApi%2Fmaster%2FDeploy%2FWarehouse.Modules.DaluxFMApi_ARM.json)
 
 Installationen vil opsætte en Windows-hostingplan og en functionapp, der indeholder softwaren fra dette GitHub-lager.
