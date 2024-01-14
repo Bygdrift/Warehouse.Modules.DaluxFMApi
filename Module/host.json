@@ -1,0 +1,25 @@
+{
+  "version": "2.0",
+  "extensions": {
+    "durableTask": {
+      "hubName": "%ModuleName%",
+      //Følgende to tilføjet fordi der ikke kan køres parallelle kald til Dalux:
+      "maxConcurrentActivityFunctions": 1,
+      "maxConcurrentOrchestratorFunctions": 1
+    }
+  },
+  "logging": {
+    "logLevel": {
+      "Module.AppFunctions.TimerTrigger": "Information",
+      "Module.AppFunctions.Basic": "Information"
+      //"default": "Information"  //Better to use Namespace.Class.Method, instead of this because it returns a lot information
+    },
+    "applicationInsights": {
+      "samplingSettings": {
+        "isEnabled": true,
+        "excludedTypes": "Request"
+      }
+    }
+  },
+  "functionTimeout": "00:10:00" //https://docs.microsoft.com/en-us/azure/azure-functions/functions-host-json#functiontimeout
+}
