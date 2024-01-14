@@ -9,6 +9,14 @@ Modulet er som standard opsat til, en gang i døgnet at kontakte Dalux og trækk
 Herfra er det enkellt at tilgå data fra fx Excel, Power BI og andre fagsystemer.
 Hver gang der laves tilretninger i dette modul, så er det enkelt at få opdateringen ind i Azure.
 
+## Video
+Beskrivelse af hvad man kan med modulet, hvordan den installeres og hvordan man fejlsøger:
+<div align="left">
+      <a href="https://www.youtube.com/watch?v=arjZKlitut8">
+         <img src="https://img.youtube.com/vi/arjZKlitut8/0.jpg">
+      </a>
+</div>
+
 # Installation i Azure
 Alle moduler kan installeres og faciliteres med ARM-skabeloner (Azure Resource Management): [Brug ARM-skabeloner til at konfigurere og vedligeholde dette modul](https://github.com/Bygdrift/Warehouse.Modules.DaluxFMAPI/tree/master/Deploy) .
 
