@@ -8,14 +8,14 @@ Som det første skal du installere [Warehouse-miljøet](https://github.com/Bygdr
 
 ## Videoer
 
-2022-01-28: [Opsæt eksempel-modulet](https://www.youtube.com/watch?v=itwd2XdHIkM):
+<!-- 2022-01-28: [Opsæt eksempel-modulet](https://www.youtube.com/watch?v=itwd2XdHIkM): -->
 
 2022-01-28: [Opdater et allerede installeret modul, når en ny opdatering er blevet pushet til GitHub](https://www.youtube.com/watch?v=XywfV_n-320):
 
 ## Konfigurer Warehouse-miljøet med portalen:
 Opsæt nu dette modul:
-[![Deploy til Azure](https://raw.githubusercontent.com/Bygdrift/Warehouse/master/Docs/Images/deploytoazureButton.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FBygdrift%2FWarehouse.Modules.Example%2Fmaster%2FDeploy%2FWarehouse.Modules.Example_ARM.json)
-[![Visualize](https://raw.githubusercontent.com/Bygdrift/Warehouse/master/Docs/Images/visualizebutton.svg)](http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FBygdrift%2FWarehouse.Modules.Example%2Fmaster%2FDeploy%2FWarehouse.Modules.Example_ARM.json)
+[![Deploy til Azure](https://raw.githubusercontent.com/Bygdrift/Warehouse/master/Docs/Images/deploytoazureButton.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FBygdrift%2FWarehouse.Modules.DaluxFMAPI%2Fmaster%2FDeploy%2FWarehouse.Modules.DaluxFMApi_ARM.json)
+[![Visualize](https://raw.githubusercontent.com/Bygdrift/Warehouse/master/Docs/Images/visualizebutton.svg)](http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2FBygdrift%2FWarehouse.Modules.DaluxFMApi%2Fmaster%2FDeploy%2FWarehouse.Modules.DaluxFMApi_ARM.json)
 
 Installationen vil opsætte en Windows-hostingplan og en functionapp, der indeholder softwaren fra dette GitHub-lager.
 
@@ -27,9 +27,9 @@ Du kan også køre ARM fra PowerShell i stedet for at køre det via portalen.
 
 Kør enten PowerShell fra computeren ved at installere [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli), eller brug [Azure Cloud Shell](https:/ /shell.azure.com/bash) fra Azure-portalen. Følgende instruktion vil fokusere på kørsel fra en computer.
 
-Download denne [ARM.parameters.json](https://raw.githubusercontent.com/Bygdrift/Warehouse.Modules.Example/master/Deploy/Warehouse.Modules.DaluxFMApi_ARM.parameters.json) til en mappe og udfyld omhyggeligt hver variabel.
+Download denne [ARM.parameters.json](https://raw.githubusercontent.com/Bygdrift/Warehouse.Modules.DaluxFMApi/master/Deploy/Warehouse.Modules.DaluxFMApi_ARM.parameters.json) til en mappe og udfyld omhyggeligt hver variabel.
 
-Download [ARM.json](https://raw.githubusercontent.com/Bygdrift/Warehouse.Modules.Example/master/Deploy/Warehouse.Modules.DaluxFMApi_ARM.json) til den samme mappe.
+Download [ARM.json](https://raw.githubusercontent.com/Bygdrift/Warehouse.Modules.DaluxFMApi/master/Deploy/Warehouse.Modules.DaluxFMApi_ARM.json) til den samme mappe.
 
 Log ind på azure: `az login`.
 
