@@ -1,8 +1,6 @@
 ﻿using Bygdrift.CsvTools;
 using Bygdrift.DataLakeTools;
 using Bygdrift.Warehouse;
-using DocumentFormat.OpenXml.Drawing.Spreadsheet;
-using Module.AppFunctions;
 using Module.Services.Models.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -16,7 +14,7 @@ namespace Module.Refines
 {
     public static class GenericRefine
     {
-        public static async Task<Csv> RefineAsync<T>(AppBase app, IEnumerable<T> data, bool truncateTable) where T : class
+        public static async Task<Csv> RefineAsync<T>(AppBase app, IEnumerable<T> data, bool deleteTable) where T : class
         {
             var now = DateTime.UtcNow.ToString("HH-mm-ss");
             var name = typeof(T).Name;
@@ -25,7 +23,10 @@ namespace Module.Refines
             var csv = CreateCsv(data);
             RemoveDuplicatedIds(app, csv, "id", name);
             await app.DataLake.SaveCsvAsync(csv, "Refined", $"{name}_{now}.csv", FolderStructure.DatePath);
-            app.Mssql.MergeCsv(csv, name, "id", truncateTable, false);
+            if (deleteTable)
+                app.Mssql.DeleteTable(name);
+
+            app.Mssql.MergeCsv(csv, name, "id", false, false);
 
             if (errors != app.Log.GetErrorsAndCriticals().Count())
             {

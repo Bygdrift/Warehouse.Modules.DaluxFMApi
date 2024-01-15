@@ -13,7 +13,7 @@ using Module.Services.Models.Helpers;
 using Module.Services.Models;
 using Bygdrift.DataLakeTools;
 using Module.Refines;
-using System.Threading;
+using Bygdrift.CsvTools;
 
 namespace Module.AppFunctions
 {
@@ -28,8 +28,8 @@ namespace Module.AppFunctions
         public static AppBase<Settings> App { get; private set; }
         public static IDurableClient Client { get; private set; }
 
-        [FunctionName(nameof(Starter))]
-        public async Task Starter([TimerTrigger("%ScheduleExpression%"
+        [FunctionName(nameof(InititateOrchestrator))]
+        public async Task InititateOrchestrator([TimerTrigger("%ScheduleExpression%"
 #if DEBUG
             ,RunOnStartup = true
 #endif
@@ -48,6 +48,8 @@ namespace Module.AppFunctions
                 App.Log.LogInformation("Has started instance {Instance}", context.InstanceId);
 
             var calls = InitCalls(App.Settings.DaluxFMDataToFetch);
+            WriteStatusToSQL(context.InstanceId, calls, false);
+
             for (int i = 0; i <= App.Settings.MaxRuns; i++)
             {
                 if (calls == null || calls.All(o => o.IsLoaded))
@@ -64,6 +66,7 @@ namespace Module.AppFunctions
             }
 
             App.Log.LogInformation($"Finished reading in {context.CurrentUtcDateTime.Subtract(App.LoadedUtc).TotalSeconds / 60} minutes.");
+            WriteStatusToSQL(context.InstanceId, calls, true);
         }
 
         [FunctionName(nameof(HandleDataAsync))]
@@ -72,46 +75,43 @@ namespace Module.AppFunctions
             if (!Basic.IsQualifiedInstance(App, context.InstanceId)) return default;
             var calls = context.GetInput<List<Call>>();
             var service = new WebService(App);
-            return await RunAsync(App, service, calls);
-        }
 
-        private static async Task<List<Call>> RunAsync(AppBase<Settings> app, WebService service, List<Call> calls)
-        {
             var started = DateTime.Now;
             var apiName = new ApiName();
             foreach (var call in calls.Where(o => !o.IsLoaded))
             {
-                if (apiName.Compare<Asset>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Asset>(app, service, call)).IsLoaded;
-                else if (apiName.Compare<AssetClassification>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<AssetClassification>(app, service, call)).IsLoaded;
-                else if (apiName.Compare<Building>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Building>(app, service, call)).IsLoaded;
-                else if (apiName.Compare<Company>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Company>(app, service, call)).IsLoaded;
-                else if (apiName.Compare<Document>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Document>(app, service, call)).IsLoaded;
-                else if (apiName.Compare<Estate>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Estate>(app, service, call)).IsLoaded;
-                else if (apiName.Compare<Floor>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Floor>(app, service, call)).IsLoaded;
-                else if (apiName.Compare<Location>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Location>(app, service, call)).IsLoaded;
-                else if (apiName.Compare<Lot>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Lot>(app, service, call)).IsLoaded;
-                else if (apiName.Compare<Room>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Room>(app, service, call)).IsLoaded;
-                else if (apiName.Compare<Ticket>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<Ticket>(app, service, call)).IsLoaded;
-                else if (apiName.Compare<WorkOrder>(call.Name)) call.IsLoaded = (await GetAndRefinAsync<WorkOrder>(app, service, call)).IsLoaded;
+                if (apiName.Compare<Asset>(call.Name)) call.IsLoaded = (await GetAndRefineAsync<Asset>(service, call)).IsLoaded;
+                else if (apiName.Compare<AssetClassification>(call.Name)) call.IsLoaded = (await GetAndRefineAsync<AssetClassification>(service, call)).IsLoaded;
+                else if (apiName.Compare<Building>(call.Name)) call.IsLoaded = (await GetAndRefineAsync<Building>(service, call)).IsLoaded;
+                else if (apiName.Compare<Company>(call.Name)) call.IsLoaded = (await GetAndRefineAsync<Company>(service, call)).IsLoaded;
+                else if (apiName.Compare<Document>(call.Name)) call.IsLoaded = (await GetAndRefineAsync<Document>(service, call)).IsLoaded;
+                else if (apiName.Compare<Estate>(call.Name)) call.IsLoaded = (await GetAndRefineAsync<Estate>(service, call)).IsLoaded;
+                else if (apiName.Compare<Floor>(call.Name)) call.IsLoaded = (await GetAndRefineAsync<Floor>(service, call)).IsLoaded;
+                else if (apiName.Compare<Location>(call.Name)) call.IsLoaded = (await GetAndRefineAsync<Location>(service, call)).IsLoaded;
+                else if (apiName.Compare<Lot>(call.Name)) call.IsLoaded = (await GetAndRefineAsync<Lot>(service, call)).IsLoaded;
+                else if (apiName.Compare<Room>(call.Name)) call.IsLoaded = (await GetAndRefineAsync<Room>(service, call)).IsLoaded;
+                else if (apiName.Compare<Ticket>(call.Name)) call.IsLoaded = (await GetAndRefineAsync<Ticket>(service, call)).IsLoaded;
+                else if (apiName.Compare<WorkOrder>(call.Name)) call.IsLoaded = (await GetAndRefineAsync<WorkOrder>(service, call)).IsLoaded;
                 else
                 {
-                    app.Log.LogError($"In the appSetting 'DaluxFMDataToFetch', there are used an unknown name: '{call.Name}'.");
+                    App.Log.LogError($"In the appSetting 'DaluxFMDataToFetch', there are used an unknown name: '{call.Name}'.");
                     call.IsLoaded = true;
                 }
                 if (started.AddMinutes(6) < DateTime.Now)
                     break;
             }
+            WriteStatusToSQL(context.InstanceId, calls, false);
             return calls;
         }
 
-        private static async Task<Call> GetAndRefinAsync<T>(AppBase<Settings> app, WebService service, Call call) where T : class
+        private static async Task<Call> GetAndRefineAsync<T>(WebService service, Call call) where T : class
         {
             var multipleRuns = call.NextBookMark != null ? "Call is split over multiple runs. Bookmark: " + call.NextBookMark + "." : "";
-            app.Log.LogInformation($"- Loading '{typeof(T).Name}' data from API. {multipleRuns}");
+            App.Log.LogInformation($"- Loading '{typeof(T).Name}' data from API. {multipleRuns}");
             var res = await service.GetDataAsync<T>(2, call.NextBookMark ?? 0);
-            await GenericRefine.RefineAsync(app, res.Items, call.NextBookMark == null);  //Truncate table when it's the first time data gets loaded at this durableCall
+            await GenericRefine.RefineAsync(App, res.Items, call.NextBookMark == null);  //Truncate table when it's the first time data gets loaded at this durableCall
             var fileName = $"{typeof(T).Name}_{DateTime.UtcNow.ToString("HH-mm-ss")}.json";
-            await app.DataLake.SaveObjectAsync(res.Items, "Raw", fileName, FolderStructure.DatePath);
+            await App.DataLake.SaveObjectAsync(res.Items, "Raw", fileName, FolderStructure.DatePath);
             call.NextBookMark = res.NextBookMark;
             if (res.NextBookMark == null)
                 call.IsLoaded = true;
@@ -123,6 +123,21 @@ namespace Module.AppFunctions
         {
             foreach (var name in itemsToFetch.ToLower().Replace(" ", string.Empty).Split(','))
                 yield return new Call(name);
+        }
+
+        private static void WriteStatusToSQL(string instanceId, IEnumerable<Call> calls, bool finished)
+        {
+            var time = DateTime.UtcNow;
+            var csv = new Csv().AddRecord(1, "InstanceId", instanceId)
+                .AddRecord(1, "Status", finished ? "Finished" : "Is working")
+                .AddRecord(1, "Started", App.LoadedUtc)
+                .AddRecord(1, "Time", time)
+                .AddRecord(1, "ElapsedMinutes", time.Subtract(App.LoadedUtc).TotalSeconds / 60)
+                .AddRecord(1, "Log", string.Join('\n', App.Log.GetLogs(Bygdrift.Warehouse.Helpers.Logs.LogType.Information)))
+                .AddRecord(1, "LogErrors", string.Join('\n', App.Log.GetErrorsAndCriticals()))
+                .AddRecord(1, "CallsMissing", string.Join(',', calls.Where(o => !o.IsLoaded).Select(o => o.Name)))
+                .AddRecord(1, "CallsFinished", string.Join(',', calls.Where(o => o.IsLoaded).Select(o => o.Name)));
+            App.Mssql.MergeCsv(csv, "ImportLog", "InstanceId", false, false);
         }
     }
 }
