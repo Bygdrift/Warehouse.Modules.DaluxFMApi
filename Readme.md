@@ -12,8 +12,8 @@ Hver gang der laves tilretninger i dette modul, så er det enkelt at få opdater
 ## Video
 Beskrivelse af hvad man kan med modulet, hvordan den installeres og hvordan man fejlsøger:
 <div align="left">
-      <a href="https://www.youtube.com/watch?v=arjZKlitut8">
-         <img src="https://img.youtube.com/vi/arjZKlitut8/0.jpg">
+      <a href="https://www.youtube.com/watch?v=-QFibuZ8UaI">
+         <img src="https://img.youtube.com/vi/-QFibuZ8UaI/0.jpg">
       </a>
 </div>
 
