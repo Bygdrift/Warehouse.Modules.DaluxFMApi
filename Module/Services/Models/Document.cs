@@ -6,9 +6,11 @@ namespace Module.Services.Models
     public class Document
     {
         public int id { get; set; }
-        public string fileName { get; set; }
+        public string fileUpoadID { get; set; }
         public int?[] buildingID { get; set; }
         public int?[] assetID { get; set; }
+        public int?[] productID { get; set; }
+        public string fileName { get; set; }
         public string size { get; set; }
         public int version { get; set; }
         public DateTime? lastChange { get; set; }

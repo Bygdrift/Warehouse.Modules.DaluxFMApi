@@ -1,49 +1,46 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace Module.Services.Models.Helpers
 {
     public class Root<T> where T : class
     {
+        public Root(IEnumerable<JToken> itemsRaw, int totalItems, int limit, string bookMark, string nextBookMark)
+        {
+            ItemsRaw = itemsRaw;
+            TotalItems = totalItems;
+            //Limit = limit;
+            Bookmark = int.Parse(bookMark);
+            NextBookmark = int.TryParse(nextBookMark, out int res) ? res : null;
+        }
 
-        public Metadata metadata { get; set; }
-        public Item<T>[] items { get; set; }
-        public Link1[] links { get; set; }
-        public int responseCode { get; set; }
-        public string responseMessage { get; set; }
-        public DateTime date { get; set; }
-    }
+        public Root(IEnumerable<JToken> itemsRaw, int totalItems, int limit, int bookmark, int? nextBookmark)
+        {
+            ItemsRaw = itemsRaw;
+            TotalItems = totalItems;
+            //  Limit = limit;
+            Bookmark = bookmark;
+            NextBookmark = nextBookmark;
+        }
 
-    public class Metadata
-    {
-        public int totalItems { get; set; }
-        public object limit { get; set; }
-        public string bookmark { get; set; }
-        public string nextBookmark { get; set; }
-    }
+        public IEnumerable<JToken> ItemsRaw { get; set; }
 
-    public class Item<T> where T : class
-    {
-        public T data { get; set; }
-        public Link[] links { get; set; }
-    }
+        public int TotalItems { get; set; }
 
-    public class Userdefinedfield
-    {
-        public string name { get; set; }
-        public string value { get; set; }
-    }
+        //public int Limit { get; set; }
 
-    public class Link
-    {
-        public string rel { get; set; }
-        public string href { get; set; }
-        public string method { get; set; }
-    }
+        public int Bookmark { get; set; }
 
-    public class Link1
-    {
-        public string rel { get; set; }
-        public string href { get; set; }
-        public string method { get; set; }
+        public int? NextBookmark { get; set; }
+
+        private List<T> _items;
+
+        public List<T> Items
+        {
+            get { return _items ??= (from JToken result in ItemsRaw select result.ToObject<T>()).ToList(); }
+            set { _items = value; }
+        }
     }
 }

@@ -14,7 +14,7 @@ namespace Module.Services.Models
         public string userName { get; set; }
         public int? buildingMasterId { get; set; }
         public int? roomMasterId { get; set; }
-        public string buildingPartMasterId { get; set; }
+        public int buildingPartMasterId { get; set; }
         public string lotMasterId { get; set; }
         public string gps { get; set; }
         public int topicMasterID { get; set; }
@@ -25,7 +25,25 @@ namespace Module.Services.Models
         public int teamID { get; set; }
         public string lastModified { get; set; }
         public DateTime? createdDate { get; set; }
-        public string history { get; set; }
+        public History[] history { get; set; }
         public Userdefinedfield[] userDefinedFields { get; set; }
     }
+
+    public class History
+    {
+        public string title { get; set; }
+        public string date { get; set; }
+        public Line[] lines { get; set; }
+        public object[] downloadRequestUrls { get; set; }
+    }
+
+    public class Line
+    {
+        public string title { get; set; }
+        public string value { get; set; }
+    }
 }
+
+
+
+

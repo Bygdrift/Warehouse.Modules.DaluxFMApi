@@ -16,6 +16,8 @@ namespace Module.Services.Models
         public string city { get; set; }
         public bool owned { get; set; }
         public string label { get; set; }
+        public string region { get; set; }
+        public string[] userRegion { get; set; }
         public float grossArea { get; set; }
         public float netArea { get; set; }
         public DateTime? lastChange { get; set; }

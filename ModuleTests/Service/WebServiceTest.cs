@@ -1,6 +1,4 @@
-﻿using Bygdrift.CsvTools;
-using Bygdrift.Warehouse;
-using Microsoft.Extensions.Configuration;
+﻿using Bygdrift.Warehouse;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Module;
@@ -56,6 +54,11 @@ namespace ModuleTests.Service
         {
             var data = await service.GetDataAsync<Building>(2);
             SaveToFile(data.Items);
+
+            await GenericRefine.RefineAsync(app, data.Items, true);
+
+
+            SaveToFile(data.Items);
         }
 
         [TestMethod]
@@ -91,7 +94,7 @@ namespace ModuleTests.Service
             var errors = app.Log.GetErrorsAndCriticals();
             Assert.IsFalse(errors.Any());
             SaveToFile(data.Items);
-            await GenericRefine.RefineAsync(app, data.Items, true);
+            await GenericRefine.RefineAsync(app, data.ItemsRaw, true);
         }
 
         [TestMethod]
@@ -122,14 +125,14 @@ namespace ModuleTests.Service
             var errors = app.Log.GetErrorsAndCriticals();
             Assert.IsFalse(errors.Any());
             SaveToFile(data.Items);
-            await GenericRefine.RefineAsync(app, data.Items, true);
+            await GenericRefine.RefineAsync(app, data.ItemsRaw, true);
         }
 
         [TestMethod]
         public async Task GetWorkOrders()
         {
             var start = DateTime.Now;
-            var data = await service.GetDataAsync<WorkOrder>(2);
+            var data = await service.GetDataAsync<WorkOrder>(1);
             var errors = app.Log.GetErrorsAndCriticals();
             Assert.IsFalse(errors.Any());
             SaveToFile(data.Items);

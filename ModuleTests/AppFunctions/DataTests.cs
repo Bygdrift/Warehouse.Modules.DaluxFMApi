@@ -1,15 +1,13 @@
-﻿using Bygdrift.CsvTools;
+﻿using Bygdrift.Tools.CsvTool;
 using Bygdrift.Warehouse;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Module;
-using Module.AppFunctions;
 using Module.Refines;
 using Module.Services.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ModuleTests.AppFunctions
@@ -31,7 +29,7 @@ namespace ModuleTests.AppFunctions
         [TestMethod]
         public async Task Call2()
         {
-            var csv = new Csv().FromCsvFile(Path.Combine(BasePath, "Files", "In", "Document.csv"));
+            var csv = new Csv().AddCsvFile(Path.Combine(BasePath, "Files", "In", "Document.csv"));
             var list = new List<int>();
             for (int i = csv.RowLimit.Min + 5; i < csv.RowLimit.Max; i++)
                 list.Add(i);

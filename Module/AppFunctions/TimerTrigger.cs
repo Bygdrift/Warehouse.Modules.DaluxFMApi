@@ -11,9 +11,10 @@ using Microsoft.Extensions.Logging;
 using Module.Services;
 using Module.Services.Models.Helpers;
 using Module.Services.Models;
-using Bygdrift.DataLakeTools;
 using Module.Refines;
-using Bygdrift.CsvTools;
+using Bygdrift.Tools.DataLakeTool;
+using Bygdrift.Tools.CsvTool;
+using Bygdrift.Tools.LogTool.Models;
 
 namespace Module.AppFunctions
 {
@@ -111,9 +112,9 @@ namespace Module.AppFunctions
             var res = await service.GetDataAsync<T>(2, call.NextBookMark ?? 0);
             await GenericRefine.RefineAsync(App, res.Items, call.NextBookMark == null);  //Truncate table when it's the first time data gets loaded at this durableCall
             var fileName = $"{typeof(T).Name}_{DateTime.UtcNow.ToString("HH-mm-ss")}.json";
-            await App.DataLake.SaveObjectAsync(res.Items, "Raw", fileName, FolderStructure.DatePath);
-            call.NextBookMark = res.NextBookMark;
-            if (res.NextBookMark == null)
+            await App.DataLake.SaveObjectAsync(res.ItemsRaw, "Raw", fileName, FolderStructure.DatePath);
+            call.NextBookMark = res.NextBookmark;
+            if (res.NextBookmark == null)
                 call.IsLoaded = true;
 
             return call;
@@ -128,15 +129,19 @@ namespace Module.AppFunctions
         private static void WriteStatusToSQL(string instanceId, IEnumerable<Call> calls, bool finished)
         {
             var time = DateTime.UtcNow;
+            var callsMissing = calls != null ? string.Join(',', calls.Where(o => !o.IsLoaded).Select(o => o.Name)) : null;
+            var callsFinished = calls != null ? string.Join(',', calls.Where(o => o.IsLoaded).Select(o => o.Name)) : null;
+
             var csv = new Csv().AddRecord(1, "InstanceId", instanceId)
                 .AddRecord(1, "Status", finished ? "Finished" : "Is working")
-                .AddRecord(1, "Started", App.LoadedUtc)
-                .AddRecord(1, "Time", time)
+                .AddRecord(1, "Started", App.LoadedUtc.ToString("s"))
+                .AddRecord(1, "Time", time.ToString("s"))
                 .AddRecord(1, "ElapsedMinutes", time.Subtract(App.LoadedUtc).TotalSeconds / 60)
-                .AddRecord(1, "Log", string.Join('\n', App.Log.GetLogs(Bygdrift.Warehouse.Helpers.Logs.LogType.Information)))
+                .AddRecord(1, "Log", string.Join('\n', App.Log.GetLogs(LogType.Information)))
                 .AddRecord(1, "LogErrors", string.Join('\n', App.Log.GetErrorsAndCriticals()))
-                .AddRecord(1, "CallsMissing", string.Join(',', calls.Where(o => !o.IsLoaded).Select(o => o.Name)))
-                .AddRecord(1, "CallsFinished", string.Join(',', calls.Where(o => o.IsLoaded).Select(o => o.Name)));
+                .AddRecord(1, "CallsMissing", callsMissing)
+                .AddRecord(1, "CallsFinished", callsFinished);
+
             App.Mssql.MergeCsv(csv, "ImportLog", "InstanceId", false, false);
         }
     }

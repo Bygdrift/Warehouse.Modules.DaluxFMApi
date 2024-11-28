@@ -12,6 +12,7 @@ namespace Module.Services.Models
         public int id { get; set; }
         public string name { get; set; }
         public string estateName { get; set; }
+        public string[] userRegion { get; set; }
         public int estateID { get; set; }
         public string alternativeName { get; set; }
         public string road { get; set; }

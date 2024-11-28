@@ -19,10 +19,18 @@ namespace Module.Services.Models
         public int floorID { get; set; }
         public string[] bimInstanceID { get; set; }
         public string labels { get; set; }
+        public int? lotID { get; set; }
         public string productName { get; set; }
         public int parentComponentID { get; set; }
         public DateTime? lastChange { get; set; }
-        public Userdefinedfield[] userDefinedFields { get; set; }
+        public string lastChangeBy { get; set; }
+        public DateTime? createdDate { get; set; }
+        public string createdBy { get; set; }
         public string deepLink { get; set; }
+        public string qrCode { get; set; }
+        public DateTime? warrantyStart { get; set; }
+        public DateTime? warrantyEnd { get; set; }
+        public DateTime? installationDate { get; set; }
+        public Userdefinedfield[] userDefinedFields { get; set; }
     }
 }

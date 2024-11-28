@@ -1,5 +1,5 @@
-﻿using Bygdrift.CsvTools;
-using Bygdrift.DataLakeTools;
+﻿using Bygdrift.Tools.CsvTool;
+using Bygdrift.Tools.DataLakeTool;
 using Bygdrift.Warehouse;
 using Module.Services.Models.Helpers;
 using Newtonsoft.Json;
@@ -21,6 +21,7 @@ namespace Module.Refines
             var errors = app.Log.GetErrorsAndCriticals().Count();
             app.Log.LogInformation("- Refine '{name}' data and save to datalake and database.", name);
             var csv = CreateCsv(data);
+
             RemoveDuplicatedIds(app, csv, "id", name);
             await app.DataLake.SaveCsvAsync(csv, "Refined", $"{name}_{now}.csv", FolderStructure.DatePath);
             if (deleteTable)
