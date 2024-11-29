@@ -7,20 +7,18 @@ namespace Module.Services.Models.Helpers
 {
     public class Root<T> where T : class
     {
-        public Root(IEnumerable<JToken> itemsRaw, int totalItems, int limit, string bookMark, string nextBookMark)
+        public Root(IEnumerable<JToken> itemsRaw, int totalItems, string bookMark, string nextBookMark)
         {
             ItemsRaw = itemsRaw;
             TotalItems = totalItems;
-            //Limit = limit;
             Bookmark = int.Parse(bookMark);
             NextBookmark = int.TryParse(nextBookMark, out int res) ? res : null;
         }
 
-        public Root(IEnumerable<JToken> itemsRaw, int totalItems, int limit, int bookmark, int? nextBookmark)
+        public Root(IEnumerable<JToken> itemsRaw, int totalItems, int bookmark, int? nextBookmark)
         {
             ItemsRaw = itemsRaw;
             TotalItems = totalItems;
-            //  Limit = limit;
             Bookmark = bookmark;
             NextBookmark = nextBookmark;
         }
@@ -28,8 +26,6 @@ namespace Module.Services.Models.Helpers
         public IEnumerable<JToken> ItemsRaw { get; set; }
 
         public int TotalItems { get; set; }
-
-        //public int Limit { get; set; }
 
         public int Bookmark { get; set; }
 

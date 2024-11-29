@@ -25,15 +25,15 @@ namespace Module.Services.Models
         public object placementDescription { get; set; }
         public DateTime? deadline { get; set; }
         public int duration { get; set; }
-        public object closedDate { get; set; }
+        public DateTime? closedDate { get; set; }
         public int expectedCost { get; set; }
-        public DateTime expectedExecutionDate { get; set; }
+        public DateTime? expectedExecutionDate { get; set; }
         public string accountName { get; set; }
         public string accountNumber { get; set; }
         public int companyID { get; set; }
         public Userdefinedfield[] userDefinedFields { get; set; }
         public DateTime createdDate { get; set; }
-        public DateTime lastChange { get; set; }
+        public DateTime? lastChange { get; set; }
         public bool isStatutory { get; set; }
         public bool hasWarranty { get; set; }
         public int[] buildingIDs { get; set; }

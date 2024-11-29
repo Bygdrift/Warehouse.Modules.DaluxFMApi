@@ -27,7 +27,7 @@ namespace ModuleTests.AppFunctions
         }
 
         [TestMethod]
-        public async Task Call2()
+        public void Call2()
         {
             var csv = new Csv().AddCsvFile(Path.Combine(BasePath, "Files", "In", "Document.csv"));
             var list = new List<int>();
@@ -47,13 +47,5 @@ namespace ModuleTests.AppFunctions
             await GenericRefine.RefineAsync<AssetClassification>(App, json, false);
         }
 
-        [TestMethod]
-        public async Task Call4()
-        {
-            var path = Path.Combine(BasePath, "Files", "In", "WorkOrder.json");
-            var file = File.ReadAllText(path);
-            var json = JsonConvert.DeserializeObject<List<WorkOrder>>(file);
-            await GenericRefine.RefineAsync(App, json, false);
-        }
     }
 }

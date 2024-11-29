@@ -93,6 +93,7 @@ namespace Module.AppFunctions
                 else if (apiName.Compare<Room>(call.Name)) call.IsLoaded = (await GetAndRefineAsync<Room>(service, call)).IsLoaded;
                 else if (apiName.Compare<Ticket>(call.Name)) call.IsLoaded = (await GetAndRefineAsync<Ticket>(service, call)).IsLoaded;
                 else if (apiName.Compare<WorkOrder>(call.Name)) call.IsLoaded = (await GetAndRefineAsync<WorkOrder>(service, call)).IsLoaded;
+                else if (apiName.Compare<WorkOrderTeam>(call.Name)) call.IsLoaded = (await GetAndRefineAsync<WorkOrderTeam>(service, call)).IsLoaded;
                 else
                 {
                     App.Log.LogError($"In the appSetting 'DaluxFMDataToFetch', there are used an unknown name: '{call.Name}'.");

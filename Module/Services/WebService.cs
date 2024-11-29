@@ -14,6 +14,7 @@ namespace Module.Services
     {
         private DateTime lastDownloadOfAccessToken;
         private HttpClient _client;
+
         private readonly string baseUrl = "https://fm-api.dalux.com/api/v1/";
         public HttpResponseMessage ClientResponse { get; private set; }
 
@@ -21,9 +22,11 @@ namespace Module.Services
 
         public WebService(AppBase<Settings> app) => App = app;
 
+        public ApiName ApiName = new();
+
         public async Task<Root<T>> GetDataAsync<T>(int maxMinutes, int bookmark = 0, int? take = null) where T : class
         {
-            var subUrl = new ApiName().GetName<T>();
+            var subUrl = ApiName.GetUrl<T>();
             var res = new List<JToken>();
             int limit = 100;
             int breaker = 0;
@@ -36,11 +39,14 @@ namespace Module.Services
             {
                 data = await GetDataPackageRawAsync<T>(subUrl, bookmark, limit);
                 if (data == null)
-                    return res.Any() ? new Root<T>(res, res.Count, limit, "0", null) : default;
+                    return res.Any() ? new Root<T>(res, res.Count, "0", null) : default;
 
                 res.AddRange(data.ItemsRaw);
 
                 if (data.NextBookmark == null || data.NextBookmark == 0)
+                    break;
+
+                if (data.TotalItems < limit)
                     break;
 
                 if (take != null && take == res.Count)
@@ -54,86 +60,8 @@ namespace Module.Services
                     throw new Exception("A programmer has to look at this error!");
                 bookmark++;
             }
-            return new Root<T>(res, data.TotalItems, limit, data.Bookmark, data.NextBookmark);
+            return new Root<T>(res, data.TotalItems, data.Bookmark, data.NextBookmark);
         }
-
-        //public MetaDataExtend<T> GetDataAsync<T>(int maxMinutes, int bookmark = 0, int? take = null) where T : class
-        //{
-        //    var subUrl = new ApiName().GetName<T>();
-
-        //    var res = new List<T>();
-        //    int limit = 100;
-        //    int breaker = 0;
-        //    var stopTime = DateTime.Now.AddMinutes(maxMinutes);
-        //    Root<T> data;
-        //    if (take != null && take < limit)
-        //        limit = (int)take;
-
-        //    while (true)
-        //    {
-        //        data = await GetDataPackageAsync<T>(subUrl, bookmark, limit);
-        //        if (data == null)
-        //            return res.Any() ? new MetaDataExtend<T>(res, res.Count, "0", null) : default;
-
-        //        res.AddRange(data.items.Select(o => o.data));
-
-        //        if (!int.TryParse(data.metadata.nextBookmark, out bookmark))
-        //            break;
-
-        //        if (bookmark == 0)
-        //            break;
-
-        //        if (take != null && take == res.Count)
-        //            break;
-
-        //        if (DateTime.Now > stopTime)
-        //            break;
-
-        //        breaker++;
-        //        if (breaker > 10000)  //1.000.000 posts - there is an error
-        //            throw new Exception("A programmer has to look at this error!");
-        //    }
-        //    return new MetaDataExtend<T>(res, data.metadata.totalItems, data.metadata.bookmark, data.metadata.nextBookmark);
-        //}
-
-        //public async Task<MetaDataExtend<T>> GetDataAsync<T>(int maxMinutes, int bookmark = 0, int? take = null) where T : class
-        //{
-        //    var subUrl = new ApiName().GetName<T>();
-
-        //    var res = new List<T>();
-        //    int limit = 100;
-        //    int breaker = 0;
-        //    var stopTime = DateTime.Now.AddMinutes(maxMinutes);
-        //    Root<T> data;
-        //    if (take != null && take < limit)
-        //        limit = (int)take;
-
-        //    while (true)
-        //    {
-        //        data = await GetDataPackageAsync<T>(subUrl, bookmark, limit);
-        //        if (data == null)
-        //            return res.Any() ? new MetaDataExtend<T>(res, res.Count, "0", null) : default;
-
-        //        res.AddRange(data.items.Select(o => o.data));
-
-        //        if (!int.TryParse(data.metadata.nextBookmark, out bookmark))
-        //            break;
-
-        //        if (bookmark == 0)
-        //            break;
-
-        //        if (take != null && take == res.Count)
-        //            break;
-
-        //        if (DateTime.Now > stopTime)
-        //            break;
-
-        //        breaker++;
-        //        if (breaker > 10000)  //1.000.000 posts - there is an error
-        //            throw new Exception("A programmer has to look at this error!");
-        //    }
-        //    return new MetaDataExtend<T>(res, data.metadata.totalItems, data.metadata.bookmark, data.metadata.nextBookmark);
-        //}
 
         public HttpClient Client
         {
@@ -159,45 +87,6 @@ namespace Module.Services
             return client;
         }
 
-
-
-        //private async Task<MetaDataExtend<T>> GetDataAsync<T>(string url, int maxMinutes, int bookmark = 0, int? take = null) where T : class
-        //{
-        //    var res = new List<T>();
-        //    int limit = 100;
-        //    int breaker = 0;
-        //    var stopTime = DateTime.Now.AddMinutes(maxMinutes);
-        //    Root<T> data;
-        //    if (take != null && take < limit)
-        //        limit = (int)take;
-
-        //    while (true)
-        //    {
-        //        data = await GetDataPackageAsync<T>(url, bookmark, limit);
-        //        if (data == null)
-        //            return res.Any() ? new MetaDataExtend<T>(res, res.Count, "0", null) : default;
-
-        //        res.AddRange(data.items.Select(o => o.data));
-
-        //        if (!int.TryParse(data.metadata.nextBookmark, out bookmark))
-        //            break;
-
-        //        if (bookmark == 0)
-        //            break;
-
-        //        if (take != null && take == res.Count)
-        //            break;
-
-        //        if (DateTime.Now > stopTime)
-        //            break;
-
-        //        breaker++;
-        //        if (breaker > 10000)  //1.000.000 posts - there is an error
-        //            throw new Exception("A programmer has to look at this error!");
-        //    }
-        //    return new MetaDataExtend<T>(res, data.metadata.totalItems, data.metadata.bookmark, data.metadata.nextBookmark);
-        //}
-
         private async Task<Root<T>> GetDataPackageRawAsync<T>(string url, int bookmark, int limit) where T : class
         {
             var response = await Client.GetAsync($"{url}?bookmark={bookmark}&limit={limit}");
@@ -209,13 +98,7 @@ namespace Module.Services
             try
             {
                 var json = await response.Content.ReadAsStringAsync();
-                var jToken = JToken.Parse(json);
-                return new Root<T> ( 
-                    jToken.SelectTokens("$..data"),
-                    (int)jToken.SelectToken("metadata.totalItems"),
-                    (int)jToken.SelectToken("metadata.limit"),
-                    (string)jToken.SelectToken("metadata.bookmark"),
-                    (string)jToken.SelectToken("metadata.nextBookmark"));
+                return ExtractDataFromJson<T>(json);
             }
             catch (Exception)
             {
@@ -224,25 +107,23 @@ namespace Module.Services
             }
         }
 
-        //private async Task<Root<T>> GetDataPackageAsync<T>(string url, int bookmark, int limit) where T : class
-        //{
-        //    var response = await Client.GetAsync($"{url}?bookmark={bookmark}&limit={limit}");
-        //    if (response.StatusCode != HttpStatusCode.OK)
-        //    {
-        //        App.Log.LogError($"The webservice '{url}' failed while trying to fetch from bookmark {bookmark}, with limit {limit}. Error: {response.ReasonPhrase}.");
-        //        return default;
-        //    }
-        //    try
-        //    {
-        //        var json = await response.Content.ReadAsStringAsync();
-        //        return JsonConvert.DeserializeObject<Root<T>>(json);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        App.Log.LogError($"The webservice '{url}' loaded data from bookmark {bookmark}, with limit {limit} successfully. But when trying to convert data into the model i DaluxFMApi, this error was raised: {response.ReasonPhrase}.");
-        //        return default;
-        //    }
-        //}
+        public Root<T> ExtractDataFromJson<T>(string json) where T : class
+        {
+            var jToken = JToken.Parse(json);
+
+            IEnumerable<JToken> itemsRaw = ApiName.GetJsonType<T>() switch
+            {
+                JsonType.Data => jToken.SelectTokens("$..data"),  //https://www.newtonsoft.com/json/help/html/SelectToken.htm
+                JsonType.Items => jToken.SelectTokens("$..items.[*]"),
+                _ => throw new NotImplementedException(),
+            };
+
+            return new Root<T>(
+                itemsRaw,
+                (int)jToken.SelectToken("metadata.totalItems"),
+                (string)jToken.SelectToken("metadata.bookmark"),
+                (string)jToken.SelectToken("metadata.nextBookmark"));
+        }
 
         /// <summary>
         /// Denne virker desværre ikke fordi man ikke kan lave parallelle kald til Dalux. De overvejer at gøre det muligt

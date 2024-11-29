@@ -32,6 +32,18 @@ namespace ModuleTests.Service
         }
 
         [TestMethod]
+        public void LoadFromDifferentJsonTypes()
+        {
+            var json1 = File.ReadAllText(Path.Combine(BasePath, "Files", "In", "Workorders.json"));
+            var res1 = service.ExtractDataFromJson<WorkOrder>(json1);
+            Assert.AreEqual(res1.Items[0].buildingID, 2214);
+
+            var json2 = File.ReadAllText(Path.Combine(BasePath, "Files", "In", "WorkorderTeam.json"));
+            var res2 = service.ExtractDataFromJson<WorkOrderTeam>(json2);
+            Assert.AreEqual(res2.Items[0].id, 37);
+        }
+
+        [TestMethod]
         public async Task GetAssets()
         {
             var data = await service.GetDataAsync<Asset>(10);
